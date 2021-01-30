@@ -1,0 +1,4 @@
+d1 $chunk 4 (fast 1) $iter 4 $s "cymelody(3, 8)" #n (irand 2) #pan rand
+
+d2 $slow 4 $s "birds" #n (irand 5)  #cut 2 #gain 0.8 #room 0.2
+d2 silence

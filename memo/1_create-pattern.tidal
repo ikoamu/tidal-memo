@@ -1,0 +1,69 @@
+{-
+# リズムパターンの生成
+-}
+
+{-
+## 休符: `~`
+-}
+d1 $ sound "bd ~  bd cp"
+
+{-
+## リズムの中のリズム: `[]`
+- d1: |bd         |hc         |bd         |hc         |
+- d2: |bd         |hc   |bd   |bd         |hc         |
+- d3: |bd         |hc   |bd   |~    |bd   |hc         |
+- d4: |bd         |hc   |cp cp|~    |bd   |hc         |
+-}
+d1 $ sound "bd hc bd hc"
+d2 $ sound "bd [hc bd] bd hc"
+d3 $ sound "bd [hc bd] [~ bd] hc"
+d4 $ sound "bd [hc [cp cp]] [~ bd] hc"
+
+{-
+## リズムの繰り返し: `*`, `/`
+同じ音が等間隔で連続する際に一気に指定できる
+- d3&d4: |bd         |bd         |cp   |cp   |cp   |cp   |
+-}
+d1 $ sound "bd bd"
+d2 $ sound "bd*2"
+
+d3 $ sound "[bd bd] [cp cp cp cp]"
+d4 $ sound "bd*2 cp*4"
+
+-- 2サイクルに1度だけ演奏する
+-- |bd  | -> 1:|bd  | 2:|    |
+d1 $ sound "bd/2"
+
+-- d2: |bd  |cp  |bd  |cp  |
+-- d3: |bd  |cp  |    |cp  |
+d2 $ sound "bd cp"
+d2 $ sound "bd/2 cp"
+
+d3 $ sound "[bd [cp hc]*2]/2 [bd [hc bd]/2]*2"
+d4 $ sound "[bd*4 [cp/2 hc]*4]/4 [bd [hc*3 bd]/2]*2"
+
+
+{-
+## パターンを並列化: `[,]`
+カンマで区切ったパターンがレイヤーに分かれて並行して演奏される
+-}
+d1 $ sound "[bd*2, cp hc cp hc*2]"
+d2 $ sound "[bd*3, hc*5]"
+d3 $ sound "[bd*3, hc*5, [~ cp]*2]"
+
+{-
+## ポリメーター: `{,}`
+リズムをそろえてパターンを並列化する
+-}
+
+-- |bd         |cp         |,
+-- |bass   |glitch |hc     |,
+d1 $ sound "[bd cp, bass glitch hc]"
+
+-- 1回目
+-- |bd         |cp         |,
+-- |bass       |glitch     |,
+-- 2回目
+-- |bd         |cp         |,
+-- |hc         |base       |,
+d2 $ sound "{bd cp, bass glitch hc}"
