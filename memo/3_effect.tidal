@@ -1,0 +1,98 @@
+{-
+# リズムパターンにエフェクトをかける
+-}
+
+{-
+## gain
+音量を変化させる
+-}
+d1
+  $ sound "bd*2 [cp*2 hc*3]"
+  # gain 1.5
+
+-- パターンとして記載することも可能
+d2
+  $ sound "bd*2 [cp*2 hc*3]"
+  # gain  "1.5  [1.0 0.8]"
+
+{-
+## pan
+左右の定位 (0.5 が真ん中, 1.0 右だけ, 0.0 左だけ) 
+-}
+d1
+  $ sound "bd*2 [cp*2 hc*3]"
+  # gain  "1.5  [1.0 0.8]"
+  # pan "0.5 [0.1 0.9]"
+
+{-
+## delay, delaytime
+delay: ディレイの強さ（音量）
+delaytime: 遅延時間
+delayfeedback: フィードバックの長さ
+-}
+d1
+  $ sound "bd*2 [cp*2 hc*3]"
+  # delay "0.5"
+  # delaytime "0.125"
+  # delayfeedback "0.7"
+
+{-
+## lpf
+ローパスフィルタ
+生成した音の低い周波数成分のみ通過させる
+引数の単位はHz
+-}
+d1
+  $ sound "bd*2 [cp*2 hc*3]"
+  # gain "1.5 [1.0 0.8]"
+  # pan "0.5 [0.1 0.9]"
+  # delay "0.5"
+  # delaytime "0.125"
+  # delayfeedback "0.7"
+  # lpf "800 8000 800 15000"
+
+{-
+## resonance
+フィルタのレゾナンスを指定する
+レゾナンスの数値を上げるとエッジのきいた音になる
+-}
+d1
+  $ sound "bd*2 [cp*2 hc*3]"
+  # gain "1.5 [1.0 0.8]"
+  # pan "0.5 [0.1 0.9]"
+  # delay "0.5"
+  # delaytime "0.125"
+  # delayfeedback "0.7"
+  # lpf "800 8000 800 15000"
+  # resonance "0.1 0.3 0.2 0.2 0.4"
+
+{-
+## shape
+音色を歪ませる
+-}
+d1
+  $ sound "bd*2 [cp*2 hc*3]"
+  # gain "1.5 [1.0 0.8]"
+  # pan "0.5 [0.1 0.9]"
+  # delay "0.5"
+  # delaytime "0.125"
+  # delayfeedback "0.7"
+  # lpf "800 8000 800 15000"
+  # resonance "0.1 0.3 0.2 0.2 0.4"
+  # shape "0.7"
+
+{-
+## vowel
+指定した母音で共鳴させる
+-}
+d1
+  $ sound "bd*2 [cp*2 hc*3]"
+  # gain "1.5 [1.0 0.8]"
+  # pan "0.5 [0.1 0.9]"
+  # delay "0.5"
+  # delaytime "0.125"
+  # delayfeedback "0.7"
+  # lpf "800 8000 800 15000"
+  # resonance "0.1 0.3 0.2 0.2 0.4"
+  # shape "0.7"
+  # vowel "u a i e"
