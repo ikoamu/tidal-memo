@@ -1,0 +1,102 @@
+{-
+# リズムパターンの変形
+-}
+
+{-
+## パターンの再生スピードの変更: `slow`, `fast`
+-}
+d1 $ sound "bd*2 [cp*2 hc*3]"
+
+d2 $ slow 2 $ sound "bd*2 [cp*2 hc*3]"
+d2 $ fast 0.5 $ sound "bd*2 [cp*2 hc*3]"
+
+d3 $ slow 0.5 $ sound "bd*2 [cp*2 hc*3]"
+d3 $ fast 2 $ sound "bd*2 [cp*2 hc*3]"
+
+{-
+## パターンの反転: `rev`
+パターンを逆再生で演奏する
+-}
+d1 $ rev $ sound "bd*2 [cp*2 hc*3]"
+d2 $ sound "[hc*3 cp*2] bd*2"
+d3 $ rev $ rev $ sound "[hc*3 cp*2] bd*2"
+
+{-
+## タイムシフト: `<~`, `~>`
+再生のタイミングを進めたり遅らせたりする
+|bd      |bd      |cp  |cp  |hc|hc|hc|
+-}
+-- 2回に1回演奏を1/4サイクル進めて演奏する
+d1 $ every 2 (0.25 ~>) $ sound "bd*2 [cp*2 hc*3]"
+-- 4回に1回演奏を1/4サイクル遅れて再生される
+d1 $ every 4 (0.25 <~) $ sound "bd*2 [cp*2 hc*3]"
+
+{-
+## パターンを少しずつずらす: `iter`
+iterは指定した引数で指定した分割数でパターンを分割して演奏する
+1サイクル演奏するごとに、パターンの開始地点を１つ後ろにシフトする
+-}
+d1 $ iter 4 $ sound "bd cp bass hc"
+-- ->                bd cp bass hc
+--                   cp bass hc bd
+--                   bass hc bc cp
+--                   hc bd cp bass
+
+{-
+## 左右別々に変化させる: `jux`
+juxは変化を右チャンネルだけに適応する
+-}
+-- 右チャンネルだけ1/4サイクルパターンずらす
+d1 $ jux (0.25 <~) $ sound "bd*2 [cp*2 hc*3]"
+
+-- juxの引数としてパターンを変化させる様々な関数をしていすることで
+-- 左右のチャンネルのずれを利用した様々な効果を生み出せない
+d1 $ jux (rev) $ sound "bd*2 [cp*2 hc*3]"
+d1 $ jux (iter 8) $ sound "bd*2 [cp*2 hc*3]"
+d1 $ jux (slow 1.5) $ sound "bd*2 [cp*2 hc*3]"
+
+{-
+## 変更させるタイミングを指定する: `every`, `whenmod`
+-}
+d1 $ every 2  (jux rev) $ sound "bd*2 [cp*2 hc*3]"
+-- パターンを変化させた場合も全体のリズムは崩れない仕組みになっている
+d2 $ every 4 (fast 2) $ sound "bd*2 [cp*2 hc*3]" -- 2倍にしたパターンは2回実行される
+d3 $ every 4 (slow 2) $ sound "bd*2 [cp*2 hc*3]" -- slowにしたパターンは半分しか演奏されない
+
+-- whenmod 最初に指定した値分だけループを繰り返し、
+-- そのループ回数が2つ目の引数の数を超えたら変化を適応する
+d1 $ whenmod 8 6 (fast 2) $ sound "bd*2 [cp*2 hc*3]"
+
+{-
+## 変形させる確率を指定する: `sometimesBy`
+確率でパターンを変化させる
+-}
+-- 20%の確率でパターンを変化（逆再生）させる
+d1 $ sometimesBy 0.2 (rev) $ sound "bd*2 [cp*2 hc*3]"
+
+-- 変化の確率が固定の関数が用意されている
+-- 50%
+d2 $ sometimes    (rev) $ sound "bd*2 [cp*2 hc*3]"
+-- 75%
+d2 $ often        (rev) $ sound "bd*2 [cp*2 hc*3]"
+-- 25%
+d2 $ rarely       (rev) $ sound "bd*2 [cp*2 hc*3]"
+-- 10%
+d2 $ almostNever  (rev) $ sound "bd*2 [cp*2 hc*3]"
+-- 90%
+d2 $ almostAlways (rev) $ sound "bd*2 [cp*2 hc*3]"
+
+{-
+## 複数の変形を適用する
+パターンを変形させる関数を複数まとめて指定することが可能
+-}
+d1
+  $ rev
+  $ slow 2
+  $ sound "bd*2 [cp*2 hc*3]"
+
+d2
+  $ often (rev)
+  $ every 4 (0.125 <~)
+  $ sometimes (jux (iter 4))
+  $ sound "bd*2 [cp*2 hc*3]"
