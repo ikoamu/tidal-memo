@@ -1,0 +1,31 @@
+setcps(65/60/4)
+
+
+-- https://moistpeace.com/2020/08/01/tidalcycles-lofi/
+d1
+  $ whenmod 8 7 ((#lpf (rangex 200 4000 $ saw)). (# lpq 0.4))
+  $ whenmod 16 15 (# gain 0)
+  $ swingBy(1/6) 8
+  $ stack[
+    s "bd:6(<3 3 3 6>,16)" # nudge "<-0.02 -0.01> -0.01 <0.02 0> 0",
+    s "sn:29(2,8,2)",
+    s "hh:18*8" # gain "[1 0.9 0.95 0.8]*2"
+    ]
+  # lpf 8000 # shape 0.2 # coarse 3 
+
+d1 $ s "bd sn bd sn"
+
+d1 $ stack[
+  s "cykick:5 ~" # gain 0.7,
+  s "cysn(5, 8)" # gain 0.5,
+  s "cypercussion(1, 3, 8)" # gain 0.6 # n 1
+]
+
+d1 $ s "breaks125"
+
+d1 $ s "bass(3, 8)" #n 2
+
+d2 $ stack[
+  "cp" # cut 3,
+  "ade(5, 8, 2)" # room 0.5 # lpf 500 # size 0.1
+]

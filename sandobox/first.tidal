@@ -1,0 +1,18 @@
+let pat1 = "{1 1/2 0 0 1/2 1 0 1 1}%16"
+
+hush
+
+d2 $ gain pat1 #sound "glitch"
+  # n (irand 5) # room 0.8 # size 2 #speed "<3 1> 2 5 1" # shape "0.4"
+  # lpf (range 500 2000 rand)
+
+d3 $ stack[
+  sound "808bd:1 ~ 808bd:1*2",
+  sound "808ht ~ 808ht*2 808ht" #n 5
+  -- sound "808cy(5, 8, 1) 808oh(3, 8)" # n (irand 3) # pan (rand) #shape "0.1"
+  -- sound "909(5, 8, 2)" # n (irand 3) # gain (rand)
+]
+
+d4 $ sound "ades2([5 3], [3 4])" # n (irand 9) # gain 1.5
+
+
