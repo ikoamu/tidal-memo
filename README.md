@@ -10,3 +10,7 @@
 
 3. sample確認
    - C-c d
+
+## いつかやりたいこと
+- [ ] EmacsからSuperColliderを起動
+- [ ] 
