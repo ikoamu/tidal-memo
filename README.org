@@ -1,0 +1,120 @@
+* howtostart
+** SuperColliderを起動
+- ~SuperDirt.start;~
+- Ctrl + Enter
+
+** Emacsでtidal-modeを起動
+- ~C-c C-s~ で起動
+- ~C-c C-c~ で一行
+- ~C-Enter~ で１セクション
+
+* tidal-memo
+
+
+* もろもろ設定
+** all-the-icons
+#+begin_src emacs-lisp
+(add-to-list 'all-the-icons-mode-icon-alist
+             '(f90-mode all-the-icons-faicon "tidal"))
+
+(add-to-list 'all-the-icons-icon-alist
+             '(
+               "\\.tidal"
+              all-the-icons-octicon "pulse"
+              :height 1.0 :v-adjust 0.0 :face all-the-icons-blue
+              ))
+#+end_src
+
+** windowsでTidalを設定
+*** tidal.elを修正
+#+begin_src emacs-lisp
+(defvar tidal-boot-script-path "c:/Users/{User}/AppData/Roaming/Cabal/x86_64-windows-ghc-8.10.3/tidal-1.6.1/BootTidal.hs"
+  ;; (let ((filepath
+  ;;        (cond
+  ;;         ((string-equal system-type "windows-nt")
+  ;;          '(("path" . "echo off && for /f %a in ('ghc-pkg latest tidal') do (for /f \"tokens=2\" %i in ('ghc-pkg describe %a ^| findstr data-dir') do (echo %i))")
+  ;;            ("separator" . "\\")
+  ;;            ))
+  ;;         ((or (string-equal system-type "darwin") (string-equal system-type "gnu/linux"))
+  ;;          '(("path" . "ghc-pkg field tidal data-dir")
+  ;;            ("separator" . "/")
+  ;;            ))
+  ;;         )
+  ;;        ))
+  ;;   (concat
+  ;;    (string-trim (cadr (split-string
+  ;;                        (shell-command-to-string (cdr (assoc "path" filepath))) ":")))
+  ;;    (cdr (assoc "separator" filepath))
+  ;;    "BootTidal.hs")
+  ;;   )
+  ;; "*Full path to BootTidal.hs (inferred by introspecting ghc-pkg package db)."
+)
+#+end_src
+
+*** init.elを修正
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/Tidal")
+(require 'haskell-mode)
+(require 'tidal)
+(global-set-key (kbd "C-c d") 'dirt-samples-toggle)
+
+;; WIP: SuperColliderをEmacsから起動
+(add-to-list 'load-path "~/.emacs.d/myel/boot-sc")
+(with-eval-after-load "tidal"
+  (require 'boot-sc)
+  (define-key tidal-mode-map (kbd "C-c s s") 'sclang-start)
+  (define-key tidal-mode-map (kbd "C-c s q") 'sclang-quit))
+#+end_src
+
+
+** Dirt-Samplesをneotreeで表示
+#+begin_src emacs-lisp
+(use-package neotree
+  :init
+  (setq-default neo-keymap-style 'concise)
+  :config
+  (setq neo-smart-open t)
+  (setq neo-create-file-auto-open t)
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  (bind-key [f8] 'neotree-toggle)
+  (bind-key "RET" 'neotree-enter-hide neotree-mode-map)
+  (bind-key "a" 'neotree-hidden-file-toggle neotree-mode-map)
+  (bind-key "<left>" 'neotree-select-up-node neotree-mode-map)
+  (bind-key "<right>" 'neotree-change-root neotree-mode-map))
+
+(defun neotree-text-scale ()
+  "Text scale for neotree."
+  (interactive)
+  (text-scale-adjust 0)
+  (text-scale-decrease 1)
+  (message nil))
+(add-hook 'neo-after-create-hook
+      (lambda (_)
+        (call-interactively 'neotree-text-scale)))
+
+;; neotree enter hide
+;; Tips from https://github.com/jaypei/emacs-neotree/issues/77
+(defun neo-open-file-hide (full-path &optional arg)
+  "Open file and hiding neotree.
+The description of FULL-PATH & ARG is in `neotree-enter'."
+  (neo-global--select-mru-window arg)
+  (find-file full-path)
+  (neotree-hide))
+
+(defun neotree-enter-hide (&optional arg)
+  "Neo-open-file-hide if file, Neo-open-dir if dir.
+The description of ARG is in `neo-buffer--execute'."
+  (interactive "P")
+  (neo-buffer--execute arg 'neo-open-file-hide 'neo-open-dir))
+
+(defun open-dirt-samples ()
+  (interactive)
+  (neo-global--open-dir "c:/Users/{User}/AppData/Local/SuperCollider/downloaded-quarks/Dirt-Samples"))
+
+(defun dirt-samples-toggle ()
+  "Toggle show the NeoTree window."
+  (interactive)
+  (if (neo-global--window-exists-p)
+      (neotree-hide)
+    (open-dirt-samples)))
+#+end_src

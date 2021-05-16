@@ -1,0 +1,9 @@
+d1 $s "bd ~"
+
+d2 $s "~  ~ sn:1 cp:2"
+
+d3 $s "[hc(3, 5, 2)]" # gain 0.8
+
+d4 $slow 4 $ n "{1 1 0 0}%4" # sound "arp"
+
+hush
