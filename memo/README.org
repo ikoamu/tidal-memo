@@ -1,0 +1,5 @@
+* bpm
+#+begin_src haskell
+-- bpm 120
+setcps (120/60/4)
+#+end_src

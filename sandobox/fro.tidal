@@ -1,0 +1,17 @@
+d1 $ s "bd <~ bd*2>"
+
+d2 $ s "hc*2 ~ ~"
+
+d3 $ s "~ [casio ~ ~ <casio:1 casio:2>]"
+
+d1 silence
+
+do
+  let pat = "{1 1 1 0 0 1 1 0 0 0}%8"
+  d4 $ s "v" |>| n pat # gain (range 0.8 1.0 rand)
+
+d5 $ "bass3" # n (irand 4) # room 0.5 # size 0.8 # gain (range 0.5 0.8 rand)
+
+
+
+hush

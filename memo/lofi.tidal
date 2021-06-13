@@ -1,0 +1,22 @@
+setcps(80/60/4)
+
+d1 $ swingBy (1/6) 8 $ stack[
+  s "cykick" # n "5"
+  ,s "~ cysn ~ cysn" #n 1
+  ,s "hh*8" # nudge "-0.01 0.02" #hpf 3000
+]
+
+
+setcps(110/60/4)
+
+d2 $ "bass" # n "1" # coarse 16 # room 0.9 #hpf 1000
+
+d3
+  -- $ swingBy (1/16) 8
+  -- $ whenmod 8 7 (spreadr ($) [shuffle (choose[18,8,4]),jux rev, (|+ n 2)])
+  $ s "superzow" # n 1
+  -- # n ("{0, <4, 5>/4, <7 9>/8}" - "{19, 5, 0}" - "<0 4 7 9>/16")
+  # sustain "{0.2 0.05}%8"
+  # gain 0.8
+
+hush

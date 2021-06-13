@@ -9,9 +9,60 @@
 - ~C-Enter~ で１セクション
 
 * tidal-memo
+** bpm
+https://tidalcycles.org/docs/patternlib/tutorials/cycles#convert-between-bpm-and-cps
+#+begin_src haskell
+-- BPM 120
+setcps (120/60/4)
+#+end_src
+** drum-pat
+#+begin_src haskell
+
+#+end_src
+** synth
+#+begin_src haskell
+d1 $ s "supersaw(5, 8)"
+  #n "[c4, e4, g4, <a4 b4>]"
+  #sustain "[0.1 0.2 0.1 0.4]*2"
+
+hush
+-- 1. [0|0|0|0|0|0|0|0]
+-- 2. [1|0|1|0|1|0|1|1]
+
+d2 $stack[
+  -- s "ifdrums(5, 8)" #n (run 3),
+  s "supersaw(5, 8, 3)"
+    #n "[c4, e4, g4, <a4 b4>]"
+    #sustain "1"
+    #room "0.7"
+    #gain "0.5"
+]
+
+hush
+
+d3 $ s "supercomparator(5, 8, 3)"
+    #n "[c4, e4, g4, <a4 b4>]"
 
 
-* もろもろ設定
+    hush
+
+d4 $ stack
+  s "supernoise*2" #n "[c5]" #sustain "0.1"
+]
+
+d3 $ s "supersaw(2, 4)"
+    #n "[c4, e4, <a4 b4>]"
+    #sustain "0.2"
+
+hush
+
+d1 $stack[
+  s "clubkick(5, 8, 3)" #n "1" #lpf 1000,
+  s "<~ bass ~ bass, bass(3, 8)>" #n "1",
+  s "hh(9, 16)"
+]
+#+end_src
+* setting
 ** all-the-icons
 #+begin_src emacs-lisp
 (add-to-list 'all-the-icons-mode-icon-alist
