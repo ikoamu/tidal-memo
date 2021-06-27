@@ -1,0 +1,5 @@
+d1 $ sound "super808" #n ""
+
+d2 $ s "testsynth2" #sustain "0.2" #pan "0.1"
+
+d2 silence

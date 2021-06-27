@@ -1,0 +1,5 @@
+#+TITLE: Synth
+
+* シンセサイザーの基本
+** ADSR
+   [[./adsr.png]]
